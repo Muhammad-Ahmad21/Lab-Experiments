@@ -1,8 +1,30 @@
-import 'package:flutter/material.dart';
+class AppConstants {
+  static const String appName = 'Mindify';
+  static const String appTagline = 'Dive and Explore Your Path to Wellness';
 
-class AppColors {
-  static const Color primary = Colors.teal;
-  static const Color background = Colors.white;
-  static const Color textDark = Color(0xFF1D1D1F);
-  static const Color textLight = Color(0xFF6E6E73);
+  static const List<String> goalsList = [
+    'Manage Anxiety',
+    'Reduce Stress',
+    'Improve Mood',
+    'Improve Sleep',
+    'Enhance Relationships',
+    'Boost Confidence',
+  ];
+
+  static const List<String> causesList = [
+    'Work/school',
+    'Relationships',
+    'Finances',
+    'Health Concerns',
+    'Life Changes',
+    'Other',
+  ];
+
+  static const List<String> frequencyOptions = [
+    'Almost Daily',
+    'Frequently',
+    'Occasionally',
+    'Rarely',
+    'Never',
+  ];
 }

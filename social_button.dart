@@ -1,47 +1,45 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SocialButton extends StatelessWidget {
-  final IconData icon; // 👈 IconData
+  final IconData icon;
   final String label;
-  final VoidCallback onPressed;
-  final Color? iconColor;
+  final VoidCallback onTap;
 
   const SocialButton({
     super.key,
-    required this.icon, // 👈 required icon
+    required this.icon,
     required this.label,
-    required this.onPressed,
-    this.iconColor,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton(
-      onPressed: onPressed,
-      style: OutlinedButton.styleFrom(
-        minimumSize: Size(double.infinity, 50.h),
-        side: BorderSide(color: Colors.grey.shade300),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            size: 24.sp,
-            color: iconColor ?? Colors.black87,
-          ), // 👈 Icon widget
-          SizedBox(width: 12.w),
-          Flexible(
-            child: Text(
-              label,
-              style: TextStyle(fontSize: 16.sp, color: Colors.black87),
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-            ),
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton(
+        onPressed: onTap,
+        style: OutlinedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
           ),
-        ],
+          side: BorderSide(color: Colors.grey.shade300),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 24, color: Colors.black87),
+            const SizedBox(width: 12),
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Colors.black87,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

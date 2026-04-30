@@ -1,111 +1,107 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mendly_1/screens/forgot_password_screen.dart';
+import 'package:mendly_1/screens/home_screen.dart';
+import 'package:mendly_1/utils/app_theme.dart';
 
-import '../../routes.dart';
-import '../../view_models/auth_view_model.dart';
-
-class SignInScreen extends ConsumerStatefulWidget {
+class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
 
   @override
-  ConsumerState<SignInScreen> createState() => _SignInScreenState();
+  State<SignInScreen> createState() => _SignInScreenState();
 }
 
-class _SignInScreenState extends ConsumerState<SignInScreen> {
-  final _emailCtrl = TextEditingController();
-  final _passCtrl = TextEditingController();
-  bool _remember = false;
+class _SignInScreenState extends State<SignInScreen> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _rememberMe = false;
 
   @override
   Widget build(BuildContext context) {
-    final authState = ref.watch(authViewModelProvider);
-    ref.listen<AuthState>(authViewModelProvider, (prev, next) {
-      if (next.isSuccess) {
-        Navigator.pushReplacementNamed(context, Routes.profileSetup);
-        ref.read(authViewModelProvider.notifier).resetSuccess();
-      }
-      if (next.errorMessage != null) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(next.errorMessage!)));
-      }
-    });
-
     return Scaffold(
-      appBar: AppBar(title: const Text('Welcome Back!')),
-      body: Padding(
-        padding: EdgeInsets.all(24.w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            SizedBox(height: 30.h),
-            Text(
-              'Sign in to Continue Your Wellness Journey',
-              style: TextStyle(fontSize: 16.sp, color: Colors.grey),
-            ),
-            SizedBox(height: 30.h),
-            TextField(
-              controller: _emailCtrl,
-              decoration: const InputDecoration(hintText: 'Email'),
-            ),
-            SizedBox(height: 16.h),
-            TextField(
-              controller: _passCtrl,
-              obscureText: true,
-              decoration: const InputDecoration(hintText: 'Password'),
-            ),
-            SizedBox(height: 10.h),
-            Row(
-              children: [
-                Checkbox(
-                  value: _remember,
-                  onChanged: (v) => setState(() => _remember = v ?? false),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Welcome Back!',
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'Sign in to Continue Your Wellness Journey',
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+              const SizedBox(height: 32),
+              TextField(
+                controller: _emailController,
+                decoration: const InputDecoration(
+                  hintText: 'Email',
+                  prefixIcon: Icon(Icons.email_outlined),
                 ),
-                const Text('Remember me'),
-                const Spacer(),
-                TextButton(
-                  onPressed: () =>
-                      Navigator.pushNamed(context, Routes.forgotPassword),
-                  child: const Text('Forgot Password?'),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _passwordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  hintText: 'Password',
+                  prefixIcon: Icon(Icons.lock_outline),
                 ),
-              ],
-            ),
-            SizedBox(height: 20.h),
-            ElevatedButton(
-              onPressed: authState.isLoading
-                  ? null
-                  : () {
-                      if (_emailCtrl.text.isEmpty || _passCtrl.text.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Please fill all fields'),
-                          ),
-                        );
-                        return;
-                      }
-                      ref
-                          .read(authViewModelProvider.notifier)
-                          .signIn(
-                            _emailCtrl.text.trim(),
-                            _passCtrl.text.trim(),
-                          );
-                    },
-              child: authState.isLoading
-                  ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                        strokeWidth: 2,
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: _rememberMe,
+                        onChanged: (value) {
+                          setState(() {
+                            _rememberMe = value ?? false;
+                          });
+                        },
                       ),
-                    )
-                  : const Text('Sign in'),
-            ),
-            SizedBox(height: 20.h),
-            const Center(child: Text('or continue with')),
-            // social buttons (optional)
-          ],
+                      const Text('Remember me'),
+                    ],
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ForgotPasswordScreen(),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      'Forgot Password?',
+                      style: TextStyle(color: AppTheme.primaryColor),
+                    ),
+                  ),
+                ],
+              ),
+              const Spacer(),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HomeScreen()),
+                  );
+                },
+                child: const Text('Sign in'),
+              ),
+              const SizedBox(height: 20),
+            ],
+          ),
         ),
       ),
     );
